@@ -27,7 +27,7 @@ public class GridAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        return MainScreen.mThumbIds.length;
     }
 
     public Object getItem(int position) {
@@ -45,14 +45,11 @@ public class GridAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater)(mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE));
             v = inflater.inflate(R.layout.image_holder, null);
             imageView = (ImageView)(v.findViewById(R.id.photo));
-            //imageView.setPadding(20, 20, 20, 20);
             imageView.setLayoutParams(new GridView.LayoutParams(w, h));
-
         } else {
             imageView = (ImageView) convertView;
         }
-        Glide.with(mContext).load(mThumbIds[position]).override(320, 240).centerCrop().into(imageView);
-
+        Glide.with(mContext).load(MainScreen.mThumbIds[position]).override(320, 240).centerCrop().into(imageView);
         return imageView;
     }
 
@@ -65,22 +62,5 @@ public class GridAdapter extends BaseAdapter {
         return result;
     }
 
-    private Integer[] mThumbIds = {
-            R.drawable.img_001,
-            R.drawable.img_002,
-            R.drawable.img_003,
-            R.drawable.img_004,
-            R.drawable.img_005,
-            R.drawable.img_006,
-            R.drawable.img_007,
-            R.drawable.img_008,
-            R.drawable.img_009,
-            R.drawable.img_010,
-            R.drawable.img_011,
-            R.drawable.img_012,
-            R.drawable.img_013,
-            R.drawable.img_014,
-            R.drawable.img_015,
-            R.drawable.img_016,
-    };
+
 }
