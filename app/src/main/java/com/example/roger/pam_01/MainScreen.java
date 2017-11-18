@@ -1,12 +1,12 @@
 package com.example.roger.pam_01;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.GridView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
@@ -31,29 +31,13 @@ public class MainScreen extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onStart();
-        GridView gridView = (GridView)findViewById(R.id.gridView);
-        gridView.setAdapter(new GridAdapter(this));
-        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == SCROLL_STATE_IDLE) {
-                    View itemView = view.getChildAt(0);
-                    int top = Math.abs(itemView.getTop());
-                    int bottom = Math.abs(itemView.getBottom());
-                    int scrollBy = top >= bottom ? bottom : -top;
-                    if (scrollBy == 0) return;
-                    smoothScrollDeferred(scrollBy, (GridView)view);
-                }
-            }
-            private void smoothScrollDeferred(final int scrollByF, final GridView viewF) {
-                final Handler h = new Handler();
-                h.post(new Runnable() {
-                    @Override
-                    public void run() { viewF.smoothScrollBy(scrollByF, 500);}
-                });
-            }
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {}
-        });
+
+        RecyclerView recView = (RecyclerView)findViewById(R.id.gridView);
+        GridLayoutManager gr = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        gr.setSpanCount(4);
+        recView.setLayoutManager(gr);
+        recView.setAdapter(new RecAdapter(this));
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(recView);
     }
 }
