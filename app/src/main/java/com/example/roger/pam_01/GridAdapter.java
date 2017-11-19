@@ -49,7 +49,7 @@ public class GridAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        Glide.with(mContext).load(MainScreen.mThumbIds[position]).override(320, 240).centerCrop().into(imageView);
+        Glide.with(mContext).load(MainScreen.mThumbIds[position]).into(imageView);
         return imageView;
     }
 

@@ -2,6 +2,7 @@ package com.example.roger.pam_01;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class MainScreen extends AppCompatActivity {
         setActionBar(myToolbar);
         getActionBar().setDisplayShowTitleEnabled(false);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getWindow().setStatusBarColor(Color.DKGRAY);
     }
 
     @Override
