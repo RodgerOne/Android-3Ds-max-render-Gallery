@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 public class GridAdapter extends BaseAdapter {
     private Context mContext;
@@ -22,7 +23,7 @@ public class GridAdapter extends BaseAdapter {
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
         h = metrics.heightPixels;
         w = metrics.widthPixels;
-        h = (h - getStatusBarHeight() - (int)(MainScreen.actionBarLength * 1.05)) / 4;
+        h = (h - getStatusBarHeight() - (int)(MainScreen.actionBarLength)) / 4;
         w /= 2;
     }
 
@@ -49,7 +50,7 @@ public class GridAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        Glide.with(mContext).load(MainScreen.mThumbIds[position]).into(imageView);
+        Glide.with(mContext).load(MainScreen.mThumbIds[position]).apply(RequestOptions.centerCropTransform()).into(imageView);
         return imageView;
     }
 
