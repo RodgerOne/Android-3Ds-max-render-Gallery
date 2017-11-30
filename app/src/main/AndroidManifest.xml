@@ -5,7 +5,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/unnamed"
-        android:label="Roger's Gallery"
+        android:label="Roger&apos;s Gallery"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".MainScreen">
@@ -15,7 +15,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Gallery"></activity>
+        <activity android:name=".Gallery" />
+        <activity android:name=".VideoActivity"></activity>
     </application>
 
 </manifest>

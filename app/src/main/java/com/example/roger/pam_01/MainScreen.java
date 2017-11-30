@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.icu.text.NumberFormat;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,14 +16,29 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class MainScreen extends AppCompatActivity {
     final Activity activity = this;
     static int actionBarLength = 200;
+    public static Integer[] mThumbIds;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
+        mThumbIds = getIdOfDrawings();
         TextView text = (TextView) findViewById(R.id.main_title);
+        text.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent i = new Intent(activity, VideoActivity.class);
+                startActivity(i);
+                return false;
+            }
+        });
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/a_m.ttf");
         text.setTypeface(tf);
         text.setHeight(actionBarLength);
@@ -53,7 +70,7 @@ public class MainScreen extends AppCompatActivity {
                 final Handler h = new Handler();
                 h.post(new Runnable() {
                     @Override
-                    public void run() { viewF.smoothScrollBy(scrollByF, 200);}
+                    public void run() { viewF.smoothScrollBy(scrollByF, 150);}
                 });
             }
             @Override
@@ -68,22 +85,22 @@ public class MainScreen extends AppCompatActivity {
             }
         });
     }
-    public static Integer[] mThumbIds = {
-            R.drawable.img_001,
-            R.drawable.img_002,
-            R.drawable.img_003,
-            R.drawable.img_004,
-            R.drawable.img_005,
-            R.drawable.img_006,
-            R.drawable.img_007,
-            R.drawable.img_008,
-            R.drawable.img_009,
-            R.drawable.img_010,
-            R.drawable.img_011,
-            R.drawable.img_012,
-            R.drawable.img_013,
-            R.drawable.img_014,
-            R.drawable.img_015,
-            R.drawable.img_016,
-    };
+    public Integer[] getIdOfDrawings(){
+        final Field[] fields =  R.drawable.class.getDeclaredFields();
+        final R.drawable drawableResources = new R.drawable();
+        List<Integer> lipsList = new ArrayList<>();
+        int resId;
+        for (int i = 0; i < fields.length; i++) {
+            try {
+                if (fields[i].getName().contains("img_")){
+                    resId = fields[i].getInt(drawableResources);
+                    lipsList.add(resId);
+                }
+            } catch (Exception e) {
+                continue;
+            }
+        }
+        return lipsList.toArray(new Integer[lipsList.size()]);
+    }
+
 }
