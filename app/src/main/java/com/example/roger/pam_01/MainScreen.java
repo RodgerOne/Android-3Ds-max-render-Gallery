@@ -9,10 +9,12 @@ import android.icu.text.NumberFormat;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
@@ -31,12 +33,11 @@ public class MainScreen extends AppCompatActivity {
         setContentView(R.layout.activity_main_screen);
         mThumbIds = getIdOfDrawings();
         TextView text = (TextView) findViewById(R.id.main_title);
-        text.setOnLongClickListener(new View.OnLongClickListener() {
+        ((ImageButton)findViewById(R.id.imageButton)).setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onClick(View v) {
                 Intent i = new Intent(activity, VideoActivity.class);
                 startActivity(i);
-                return false;
             }
         });
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/a_m.ttf");
