@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Gallery" />
-        <activity android:name=".VideoActivity"></activity>
+        <activity android:name=".VideoActivity" />
+        <activity android:name=".SlideShow"></activity>
     </application>
 
 </manifest>

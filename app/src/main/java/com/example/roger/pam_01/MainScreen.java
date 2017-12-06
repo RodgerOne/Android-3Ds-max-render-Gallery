@@ -54,6 +54,7 @@ public class MainScreen extends AppCompatActivity {
     protected void onResume() {
         super.onStart();
         GridView gridView = (GridView)findViewById(R.id.gridView);
+        gridView.setSmoothScrollbarEnabled(true);
         gridView.setAdapter(new GridAdapter(this));
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -71,7 +72,7 @@ public class MainScreen extends AppCompatActivity {
                 final Handler h = new Handler();
                 h.post(new Runnable() {
                     @Override
-                    public void run() { viewF.smoothScrollBy(scrollByF, 150);}
+                    public void run() { viewF.smoothScrollBy(scrollByF, 300);}
                 });
             }
             @Override

@@ -43,7 +43,7 @@ public class Gallery extends AppCompatActivity {
                     vs.setOutAnimation(left_out);
                     vs.setInAnimation(right_in);
                     Glide.with(a).load(MainScreen.mThumbIds[getNextPosition()]).into((ImageView)vs.getNextView());
-                    Toast.makeText(a, "Lewo, _i = " + _i, Toast.LENGTH_SHORT);
+                    //Toast.makeText(a, "Lewo, _i = " + _i, Toast.LENGTH_SHORT);
                     vs.showNext();
             }
 
@@ -53,7 +53,7 @@ public class Gallery extends AppCompatActivity {
                 vs.setInAnimation(left_in);
                 vs.setOutAnimation(right_out);
                 Glide.with(a).load(MainScreen.mThumbIds[getPreviousPosition()]).into((ImageView)vs.getNextView());
-                Toast.makeText(a, "Prawo, _i = " + _i, Toast.LENGTH_SHORT);
+                //Toast.makeText(a, "Prawo, _i = " + _i, Toast.LENGTH_SHORT);
                 vs.showNext();
             }
         });

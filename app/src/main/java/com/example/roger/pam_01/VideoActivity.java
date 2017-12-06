@@ -1,6 +1,7 @@
 package com.example.roger.pam_01;
 
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -82,9 +83,9 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     public void interakcja(View view){
-        Toast.makeText(this,
-        sVideoView.getDuration() + "    "  +
-        sVideoView.getCurrentPosition(),
-                Toast.LENGTH_LONG).show();
+        Intent i = new Intent(this, SlideShow.class);
+        i.putExtra("duration", sVideoView.getDuration());
+        i.putExtra("current", sVideoView.getCurrentPosition());
+        startActivity(i);
     }
 }
