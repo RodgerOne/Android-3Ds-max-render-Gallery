@@ -4,23 +4,17 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.icu.text.NumberFormat;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toolbar;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainScreen extends AppCompatActivity {
@@ -33,7 +27,7 @@ public class MainScreen extends AppCompatActivity {
         setContentView(R.layout.activity_main_screen);
         mThumbIds = getIdOfDrawings();
         TextView text = (TextView) findViewById(R.id.main_title);
-        ((ImageButton)findViewById(R.id.imageButton)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.imageButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(activity, VideoActivity.class);
@@ -52,7 +46,7 @@ public class MainScreen extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onStart();
+        super.onResume();
         GridView gridView = (GridView)findViewById(R.id.gridView);
         gridView.setSmoothScrollbarEnabled(true);
         gridView.setAdapter(new GridAdapter(this));
@@ -98,11 +92,8 @@ public class MainScreen extends AppCompatActivity {
                     resId = fields[i].getInt(drawableResources);
                     lipsList.add(resId);
                 }
-            } catch (Exception e) {
-                continue;
-            }
+            }catch(Exception e){continue;}
         }
         return lipsList.toArray(new Integer[lipsList.size()]);
     }
-
 }

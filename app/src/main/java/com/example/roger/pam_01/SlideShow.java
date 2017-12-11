@@ -1,24 +1,14 @@
 package com.example.roger.pam_01;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.constraint.ConstraintLayout;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import com.bumptech.glide.GenericTransitionOptions;
-import com.bumptech.glide.Glide;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +21,7 @@ public class SlideShow extends Activity {
     final Integer[] frames = getIdOfDrawings();
     final Activity _a = this;
 
-    private int pos = 10;
+    private int pos = 8;
     private int q = 1000 / _framerate;
 
     Handler handler = new Handler();
@@ -45,15 +35,14 @@ public class SlideShow extends Activity {
                 double tmp = MoveListener.getPosition();
                 if(tmp != 0.0 ){   if (tmp > 0) pos++; else pos --;}
                 pos = pos >= frames.length? 0 : pos <= 0? frames.length-1 : pos;
-                //Glide.with(_a).load(frames[pos]).into(img);
-                //img.setImageResource(frames[pos]);
                 img.setImageBitmap(buffer.remove(0));
-                //rv.scrollToPosition(pos);
+                //img.setImageBitmap((decodeSampledBitmapFromResource(frames[pos])));
                 start();
                 buffer.add((decodeSampledBitmapFromResource(frames[pos])));
             }
         }
     };
+
     public void start(){
         go = true;
         double tmp = Math.abs(MoveListener.getPosition());
@@ -69,10 +58,7 @@ public class SlideShow extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         getWindow().setStatusBarColor(Color.DKGRAY);
 
-        img = (ImageView)findViewById(R.id.img);
-
         for(int i=0; i<pos; i++){
-            //buffer.add(getDrawable(frames[i]));
             buffer.add(decodeSampledBitmapFromResource(frames[pos]));
         }
 
@@ -80,39 +66,18 @@ public class SlideShow extends Activity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         h = metrics.heightPixels - getStatusBarHeight();
         w = metrics.widthPixels;
+
+        img = (ImageView)findViewById(R.id.img);
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams((int)(w * 0.75), (int)(h*0.75));
+        params.leftToLeft = R.id.activity_slide_show;
+        params.topToTop = R.id.activity_slide_show;
+        params.rightToRight = R.id.activity_slide_show;
+        params.bottomToBottom = R.id.activity_slide_show;
+        params.horizontalBias = 0.2f;
+        params.verticalBias = 0.2f;
+        img.setLayoutParams(params);
         findViewById(R.id.activity_slide_show).setOnTouchListener(new MoveListener(this, 1.5));
-        /*
-        rv = (RecyclerView)findViewById(R.id.slider);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),1);
-        rv.setLayoutManager(layoutManager);
-        rv.setAdapter(new RecyclerView.Adapter() {
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_holder, parent, false);
-                return new ViewHolder(view);
-            }
-
-            @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-                Glide.with(_a).load(frames[position]).into(((ViewHolder)holder).img);
-                //((ViewHolder)holder).img.setImageResource(frames[position]);
-            }
-
-            @Override
-            public int getItemCount() {
-                return frames.length;
-            }
-            class ViewHolder extends RecyclerView.ViewHolder{
-                private ImageView img;
-                public ViewHolder(View view) {
-                    super(view);
-                    img = (ImageView) view.findViewById(R.id.photo);
-                }
-            }
-        });*/
     }
-
-
 
     public int getStatusBarHeight() {
         int result = 0;
@@ -122,8 +87,6 @@ public class SlideShow extends Activity {
         }
         return result;
     }
-
-
 
     public Integer[] getIdOfDrawings(){
         final Field[] fields =  R.raw.class.getDeclaredFields();
@@ -136,24 +99,13 @@ public class SlideShow extends Activity {
                     resId = fields[i].getInt(rawResources);
                     lipsList.add(resId);
                 }
-            } catch (Exception e) {
-                continue;
-            }
+            }catch(Exception e){continue;}
         }
         return lipsList.toArray(new Integer[lipsList.size()]);
     }
 
-    public  Bitmap decodeSampledBitmapFromResource(int resId) {
-
-        // First decode with inJustDecodeBounds=true to check dimensions
+    private  Bitmap decodeSampledBitmapFromResource(int resId){
         final BitmapFactory.Options options = new BitmapFactory.Options();
-        //options.inJustDecodeBounds = true;
-        //BitmapFactory.decodeFile(resId, options);
-
-        // Calculate inSampleSize
-        //options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
         options.inDither = true;
