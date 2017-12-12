@@ -28,14 +28,14 @@ public class SlideShow extends Activity {
     final int _framerate = 24;
     private static volatile int _step = 1;
     private volatile int _position = 0;
+    private int pos = 0;
     private final int q = 1000 / _framerate;
     private int border = frames.length;
     private int w, h;
 
-    private double last_coef_buffer = 1, _coef_buffer = 1;
-
     public static boolean go = false;
     private volatile boolean runThreads = false;
+    private volatile boolean pauseThreads = false;
 
     private Thread th1, th2, th3;
 
@@ -59,20 +59,17 @@ public class SlideShow extends Activity {
     ReentrantLock lock_position = new ReentrantLock(), lock_direction = new ReentrantLock();
     public void start(){
         go = true;
+        pauseThreads = false;
         double tmp = MoveListener.getPosition();
-        if(last_coef_buffer*tmp < 0 && lock_direction.tryLock() && lock_position.tryLock()){
-            _step *= -1;
-           _position += _step * buffer.size();
-           buffer.clear();
-           lock_position.unlock();
-           lock_direction.unlock();
-        }
-        if(tmp != 0)last_coef_buffer = tmp;
+
+        if(lock_direction.tryLock()){ _step = tmp>0? 1 : tmp<0? -1 : 0; lock_direction.unlock();}
+
         tmp = Math.abs(tmp);
         tmp = tmp == 0.0? 1.0 : tmp;
+
         handler.postDelayed(r, (int)((double)q  / tmp));
     }
-    public void stop(){ go = false; }
+    public void stop(){ go = false; /*buffer.clear();*/}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +108,7 @@ public class SlideShow extends Activity {
             @Override
             public void run() {
                 while(runThreads) {
+                    while(pauseThreads)try{sleep(100);}catch (Exception e){continue;}
                     if (buffer.size() < 16)
                         try{
                             if(lock_position.tryLock()){
@@ -129,6 +127,7 @@ public class SlideShow extends Activity {
             @Override
             public void run() {
                 while(runThreads) {
+                    while(pauseThreads)try{sleep(100);}catch (Exception e){continue;}
                     if (buffer.size() < 10)
                         try{
                             if(lock_position.tryLock()){
@@ -147,6 +146,7 @@ public class SlideShow extends Activity {
             @Override
             public void run() {
                 while(runThreads) {
+                    while(pauseThreads)try{sleep(100);}catch (Exception e){continue;}
                     if (buffer.size() < 5)
                         try{
                             if(lock_position.tryLock()){
