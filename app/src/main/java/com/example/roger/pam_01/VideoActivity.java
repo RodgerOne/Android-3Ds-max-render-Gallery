@@ -18,13 +18,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 public class VideoActivity extends AppCompatActivity {
 
-    int h, w;
+    int h, w, ms = 0;
     static VideoView sVideoView;
 
     @Override
@@ -63,7 +64,7 @@ public class VideoActivity extends AppCompatActivity {
                 mVideoView.start();
             }
         });
-
+    mVideoView.seekTo(ms);
     }
 
     public int getStatusBarHeight() {
@@ -75,17 +76,32 @@ public class VideoActivity extends AppCompatActivity {
         return result;
     }
     public void play(View view){
+        findViewById(R.id.play).setBackground(getDrawable(R.drawable.border_highlighted));
+        findViewById(R.id.pause).setBackground(getDrawable(R.drawable.border_normal));
         sVideoView.start();
     }
 
     public void pause(View view){
+        findViewById(R.id.pause).setBackground(getDrawable(R.drawable.border_highlighted));
+        findViewById(R.id.play).setBackground(getDrawable(R.drawable.border_normal));
         sVideoView.pause();
     }
 
     public void interakcja(View view){
+        findViewById(R.id.interakcja).setBackground(getDrawable(R.drawable.border_highlighted));
+        findViewById(R.id.pause).setBackground(getDrawable(R.drawable.border_normal));
+        findViewById(R.id.play).setBackground(getDrawable(R.drawable.border_normal));
         Intent i = new Intent(this, SlideShow.class);
         i.putExtra("duration", sVideoView.getDuration());
         i.putExtra("current", sVideoView.getCurrentPosition());
-        startActivity(i);
+        startActivityForResult(i,0);
+        findViewById(R.id.interakcja).setBackground(getDrawable(R.drawable.border_normal));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        sVideoView.seekTo(data.getExtras().getInt("ms"));
+        play(null);
     }
 }

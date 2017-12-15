@@ -9,9 +9,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class MoveListener implements View.OnTouchListener {
-    private double _maxMultiplier, start_x, tmp_coef, min = 0.5, max = 2.5;
+    private double _maxMultiplier, start_x, tmp_coef, min = 0.5, max = 2.0;
     private static double _coef = 0.0;
     private Activity _a;
+    private SlideShow s;
 
     private DisplayMetrics metrics;
     private int w;
@@ -26,6 +27,7 @@ public class MoveListener implements View.OnTouchListener {
 
     public MoveListener(Activity activity, double maxMultiplier){
         _a = activity;
+        s = (SlideShow) _a;
         _maxMultiplier = maxMultiplier;
         tv = (TextView)_a.findViewById(R.id.move_pointer);
         sb = (SeekBar)_a.findViewById(R.id.seekBar);
@@ -46,18 +48,15 @@ public class MoveListener implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 start_x = fx;
-                ((SlideShow)_a).start();
                 break;
             case MotionEvent.ACTION_MOVE:
                 tmp_coef = (fx - start_x) / (w/2) * _maxMultiplier;
                 tmp_coef = (tmp_coef < min && tmp_coef > -min)? 0 : tmp_coef;
                 if(tmp_coef > 0 )tmp_coef *=tmp_coef; else tmp_coef *=-tmp_coef;
                 tmp_coef = tmp_coef > max? max : tmp_coef < -max? -max : tmp_coef;
-                //_coef = ((double)((int)(tmp_coef * 100)))/100;
                 tmp_coef = ((double)((int)(tmp_coef * 100)))/100;
 
-                //sb.setProgress((int)((_coef + max)*20));  // to byla zanim oddalem animacje
-                anim = ValueAnimator.ofInt((int)((_coef + max)*20), (int)((tmp_coef+max)*20));
+                anim = ValueAnimator.ofInt((int)((_coef + max)*25), (int)((tmp_coef+max)*25));
                 anim.setDuration(250);
                 anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
@@ -67,13 +66,13 @@ public class MoveListener implements View.OnTouchListener {
                     }
                 });
                 anim.start();
-                _coef = tmp_coef;
 
+                _coef = tmp_coef;
                 tv.setText(String.valueOf(_coef));
-                if(!SlideShow.go) ((SlideShow)_a).start();
+                if(!s.go && _coef != 0) s.start();
                 break;
             case MotionEvent.ACTION_UP:
-                anim = ValueAnimator.ofInt((int)((_coef + max)*20), (int)(max*20));
+                anim = ValueAnimator.ofInt((int)((_coef + max)*25), (int)(max*25));
                 anim.setDuration(300);
                 anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
@@ -83,11 +82,9 @@ public class MoveListener implements View.OnTouchListener {
                     }
                 });
                 anim.start();
-
                 _coef = 0.0;
-                //sb.setProgress((int)((_coef + max)*20));
                 tv.setText(String.valueOf(_coef));
-                ((SlideShow)_a).stop();
+                s.stop();
                 break;
         }
         return true;
