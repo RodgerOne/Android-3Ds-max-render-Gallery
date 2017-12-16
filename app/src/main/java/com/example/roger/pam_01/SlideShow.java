@@ -67,13 +67,13 @@ public class SlideShow extends Activity {
                     if (pos < 0) pos = border + pos;
                 }
                 //INTERAKCJE
-                if(pos > 50 && pos < 80){
+                if(pos > 40 && pos < 70){
                     elemOne.setVisibility(View.VISIBLE);
-                    elemOne.setImageAlpha(pos < 55? (pos-50)*50 : pos>75? (80-pos)*50: 255);
-                    lp1.horizontalBias = 0.27f - (pos<65? ((float)(pos - 50)/800) : ((float)(pos - 50)/500) - 0.009f);
-                    lp1.verticalBias = 0.6f + (pos<65? ((float)(pos - 50)/300) : ((float)(pos - 50)/180 - 0.033f));
-                    lp1.width = 150 + (int)((pos - 50));
-                    lp1.height = 150 + (int)((pos - 50));
+                    elemOne.setImageAlpha(pos < 45? (pos-40)*50 : pos>65? (70-pos)*50 : 255);
+                    lp1.horizontalBias = 0.27f - (pos<65? ((float)(pos - 40)/800) : ((float)(pos - 40)/500) - 0.018f);
+                    lp1.verticalBias = 0.6f + (pos<65? ((float)(pos - 40)/300) : ((float)(pos - 40)/180 - 0.055f));
+                    lp1.width = 150 + (int)((pos - 40));
+                    lp1.height = 150 + (int)((pos - 40));
                     elemOne.setLayoutParams(lp1);
                 }else{
                     elemOne.setVisibility(View.INVISIBLE); //pierwszy elem
@@ -86,14 +86,14 @@ public class SlideShow extends Activity {
                     elemTwo.setVisibility(View.VISIBLE);
                     elemTwo.setImageAlpha(pos < 175? (pos-170)*50 : pos>195? (200-pos)*50: 255);
                     lp2.horizontalBias = 0.36f + ( (float)(pos - 170)/1000);// - (pos<65? ((float)(pos - 170)/800) : ((float)(pos - 170)/500) - 0.009f);
-                    lp2.verticalBias = 0.2f + ((float)(pos - 170)/65);//(pos<65? ((float)(pos - 170)/300) : ((float)(pos - 170)/180 - 0.033f));
+                    lp2.verticalBias = 0.25f + ((float)(pos - 170)/65);//(pos<65? ((float)(pos - 170)/300) : ((float)(pos - 170)/180 - 0.033f));
                     lp2.width = 180 + (int)((pos - 170)*1.4);
                     lp2.height = 180 + (int)((pos - 170)*1.4);
                     elemTwo.setLayoutParams(lp2);
                 }else{
                     elemTwo.setVisibility(View.INVISIBLE); //pierwszy elem
                     lp2.horizontalBias = 0.36f;
-                    lp2.verticalBias = 0.2f;//drugi elem
+                    lp2.verticalBias = 0.25f;//drugi elem
                     if(showInfo)hideDisplays();
                 }
                 //KONIEC INTERAKCJI
@@ -257,9 +257,9 @@ public class SlideShow extends Activity {
     }
 
     private void createThreads() {
-        th1 = new LoadingThread(16, 13);
-        th2 = new LoadingThread(10, 12);
-        th3 = new LoadingThread(5, 11);
+        th1 = new LoadingThread(4, 13);
+        th2 = new LoadingThread(2, 12);
+        th3 = new LoadingThread(1, 11);
     }
 
     class LoadingThread extends Thread{
@@ -275,15 +275,16 @@ public class SlideShow extends Activity {
                 if (buffer.size() < _sizeLimit)
                     try{
                         if(lock_position.tryLock() && lock_direction.tryLock()){
-                            _position = (_position + _step) % border;
-                            if(_position < 0) _position = border + _position;
-                            buffer.put(decodeSampledBitmapFromResource(frames[_position]));
+                            if(_step != 0) {
+                                _position = (_position + _step) % border;
+                                if (_position < 0) _position = border + _position;
+                                buffer.put(decodeSampledBitmapFromResource(frames[_position]));
+                            }
                             lock_position.unlock();
                             lock_direction.unlock();
                         }
                     }catch (Exception e){continue;}
                 else try {sleep(_timeQuant);} catch (Exception e) {continue;}
-
             }
         }
     }
