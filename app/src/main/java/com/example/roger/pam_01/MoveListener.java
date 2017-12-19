@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -19,7 +20,6 @@ public class MoveListener implements View.OnTouchListener {
     private TextView tv;
     private SeekBar sb;
     private final MoveListener th = this;
-
 
     public static double getPosition(){return _coef;}
 

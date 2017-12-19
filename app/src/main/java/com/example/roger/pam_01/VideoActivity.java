@@ -47,8 +47,8 @@ public class VideoActivity extends AppCompatActivity {
         h = (h - getStatusBarHeight());
 
         ViewGroup.LayoutParams params = mVideoView.getLayoutParams();
-        params.height = (int)(h * 0.9);
-        params.width = (int)(w * 0.9);
+        params.height = (int)(h * 0.75);
+        params.width = (int)(w * 0.75);
         mVideoView.setLayoutParams(params);
 
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

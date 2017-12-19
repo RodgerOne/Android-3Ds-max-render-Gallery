@@ -71,9 +71,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.318" />
+
+        <ImageButton
+            android:id="@+id/elem_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="#00000000"
+            android:onClick="elemThreeClicked"
+            android:src="@drawable/interaction_element"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.104"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.318" />
     </android.support.constraint.ConstraintLayout>
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/buffer_size_pointer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,7 +105,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/tv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -99,7 +118,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/tv2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -112,7 +131,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv1" />
 
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/move_pointer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -139,12 +158,12 @@
         android:progressDrawable="@android:color/transparent"
         android:thumb="@drawable/thumb"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/img"
-        app:layout_constraintStart_toStartOf="@+id/img"
-        app:layout_constraintTop_toBottomOf="@+id/img" />
+        app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/_position_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -157,7 +176,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/pos_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -170,7 +189,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -183,7 +202,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-
+        android:visibility="invisible"
         android:id="@+id/pos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -209,22 +228,45 @@
         app:layout_constraintStart_toEndOf="@+id/constraintLayout"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
 
-    <TextView
-        android:id="@+id/textView2"
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:alpha="0.0"
-        android:text="Lorem ipsum dolor amet. Wiadomość ma za zadanie przetestować jak to wygląda."
-        android:textSize="20sp"
-        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="@+id/pos"
         app:layout_constraintStart_toStartOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintTop_toTopOf="@+id/imageView2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+            app:layout_constraintEnd_toEndOf="@+id/pos"
+            app:layout_constraintStart_toStartOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="@+id/imageView2">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:alpha="0.0"
+                android:text="Lorem ipsum dolor amet. Wiadomość ma za zadanie przetestować jak to wygląda."
+                android:textSize="20sp"
+                android:textStyle="italic"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="@+id/pos"
+                app:layout_constraintStart_toStartOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </android.support.constraint.ConstraintLayout>

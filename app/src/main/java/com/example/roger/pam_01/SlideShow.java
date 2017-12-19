@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -30,7 +33,7 @@ public class SlideShow extends Activity {
     LinkedBlockingQueue<Bitmap> buffer = new LinkedBlockingQueue<>();
     final Integer[] frames = getIdOfDrawings();
 
-    final int _framerate = 24;
+    final int _framerate = 30;
     private static volatile int _step = 1;
     private volatile int _position = 0;
     private int pos = 0;
@@ -49,8 +52,8 @@ public class SlideShow extends Activity {
     ImageView img;
     SeekBar sb;
 
-    ImageButton elemOne, elemTwo;
-    ConstraintLayout.LayoutParams lp1, lp2;
+    ImageButton elemOne, elemTwo, elemThree;
+    ConstraintLayout.LayoutParams lp1, lp2, lp3;
     //tmp
     TextView pos_pointer, _position_pointer;
 
@@ -96,6 +99,20 @@ public class SlideShow extends Activity {
                     lp2.verticalBias = 0.25f;//drugi elem
                     if(showInfo)hideDisplays();
                 }
+                if(pos > 540 && pos < 640){
+                    elemThree.setVisibility(View.VISIBLE);
+                    elemThree.setImageAlpha(pos < 546? (pos-540)*50 : pos>634? (640-pos)*50: 255);
+                    lp3.horizontalBias = 0.17f + ( (float)(pos - 540)/150);// - (pos<65? ((float)(pos - 170)/800) : ((float)(pos - 170)/500) - 0.009f);
+                    lp3.verticalBias = 0.17f - ((float)(pos - 540)/1000);//(pos<65? ((float)(pos - 170)/300) : ((float)(pos - 170)/180 - 0.033f));
+                    lp3.width = 240 + (int)((pos - 540)*1.4);
+                    lp3.height = 240 + (int)((pos - 540)*1.4);
+                    elemThree.setLayoutParams(lp3);
+                }else{
+                    elemThree.setVisibility(View.INVISIBLE); //pierwszy elem
+                    lp3.horizontalBias = 0.17f;
+                    lp3.verticalBias = 0.17f;//drugi elem
+                    if(showInfo)hideDisplays();
+                }
                 //KONIEC INTERAKCJI
                 tv.setText(String.valueOf(buffer.size()));
                 pos_pointer.setText(String.valueOf(pos));
@@ -120,7 +137,7 @@ public class SlideShow extends Activity {
         go = false;
         pauseThreads = true;
         //buffer.clear();
-        if(lock_position.tryLock()) {_position = pos; buffer.clear(); lock_position.unlock();}// - 3*_step;
+        if(lock_position.tryLock()) {_position = pos; buffer.clear(); lock_position.unlock();}
     }
 
     @Override
@@ -145,9 +162,11 @@ public class SlideShow extends Activity {
         sb = (SeekBar)findViewById(R.id.seekBar);
         elemOne = (ImageButton)findViewById(R.id.elem_one);
         elemTwo = (ImageButton)findViewById(R.id.elem_two);
+        elemThree = (ImageButton)findViewById(R.id.elem_three);
         lp1 = (ConstraintLayout.LayoutParams) elemOne.getLayoutParams();//new ConstraintLayout.LayoutParams(100,100);
         lp2 = (ConstraintLayout.LayoutParams) elemTwo.getLayoutParams();//new ConstraintLayout.LayoutParams(100,100);
-        //tmp
+        lp3 = (ConstraintLayout.LayoutParams) elemThree.getLayoutParams();//new ConstraintLayout.LayoutParams(100,100);
+
         pos_pointer = (TextView)findViewById(R.id.pos);
         _position_pointer = (TextView)findViewById(R.id._position);
 
@@ -160,8 +179,7 @@ public class SlideShow extends Activity {
         params.verticalBias = 0.2f;
         img.setLayoutParams(params);
         img.setImageResource(frames[_position]);
-
-        findViewById(R.id.activity_slide_show).setOnTouchListener(new MoveListener(this, 2.25));
+        findViewById(R.id.activity_slide_show).setOnTouchListener(new MoveListener(this, 2.5));
 
         runThreads = true;
         createThreads();
@@ -213,6 +231,14 @@ public class SlideShow extends Activity {
         if(!showInfo){showDisplays(s);}
         else{hideDisplays();}
     }
+    public void elemThreeClicked(View view){
+        String s = "\tŻyrandol ten został zaprojektowany przez genialnego " +
+                "architekta wnętrz z wydziału Informatyki i Zarządzania " +
+                "Politechniki Wrocławskiej. Sam autor wypiera się fenomenu tłumacząc," +
+                " że kształt i stylistyka tego arcydzieła jest efektem przypadkowych działań.";
+        if(!showInfo){showDisplays(s);}
+        else{hideDisplays();}
+    }
 
     @Override
     public void onBackPressed() {
@@ -251,7 +277,7 @@ public class SlideShow extends Activity {
     private  Bitmap decodeSampledBitmapFromResource(int resId){
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = false;
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;//RGB_565;
         options.inDither = true;
         return BitmapFactory.decodeResource(_a.getResources(), resId, options);
     }
@@ -289,62 +315,3 @@ public class SlideShow extends Activity {
         }
     }
 }
-/*
-th1 = new Thread(){
-            @Override
-            public void run() {
-                while(runThreads) {
-                    while(pauseThreads)try{sleep(100);}catch (Exception e){continue;}
-                    if (buffer.size() < 16)
-                        try{
-                            if(lock_position.tryLock()){
-                                _position = (_position + _step) % border;
-                                if(_position < 0) _position = border + _position;
-                                buffer.put(decodeSampledBitmapFromResource(frames[_position]));
-                                lock_position.unlock();
-                            }
-                        }catch (Exception e){continue;}
-                    else try {sleep(13);} catch (Exception e) {continue;}
-
-                }
-            }
-        };
-        th2 = new Thread(){
-            @Override
-            public void run() {
-                while(runThreads) {
-                    while(pauseThreads)try{sleep(100);}catch (Exception e){continue;}
-                    if (buffer.size() < 10)
-                        try{
-                            if(lock_position.tryLock()){
-                                _position = (_position + _step) % border;
-                                if(_position < 0) _position = border + _position;
-                                buffer.put(decodeSampledBitmapFromResource(frames[_position]));
-                                lock_position.unlock();
-                            }
-                        }catch (Exception e){continue;}
-                    else try {sleep(12);} catch (Exception e) {continue;}
-
-                }
-            }
-        };
-        th3 = new Thread(){
-            @Override
-            public void run() {
-                while(runThreads) {
-                    while(pauseThreads)try{sleep(100);}catch (Exception e){continue;}
-                    if (buffer.size() < 5)
-                        try{
-                            if(lock_position.tryLock()){
-                                _position = (_position + _step) % border;
-                                if(_position < 0) _position = border + _position;
-                                buffer.put(decodeSampledBitmapFromResource(frames[_position]));
-                                lock_position.unlock();
-                            }
-                        }catch (Exception e){continue;}
-                    else try {sleep(11);} catch (Exception e) {continue;}
-
-                }
-            }
-        };
-         */
